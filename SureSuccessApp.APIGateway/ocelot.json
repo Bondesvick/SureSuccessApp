@@ -1,0 +1,66 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/create",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 51331
+        }
+      ],
+      "UpstreamPathTemplate": "/create",
+      "Key": "Create"
+    },
+    {
+      "DownstreamPathTemplate": "/read",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 25878
+        }
+      ],
+      "UpstreamPathTemplate": "/read",
+      "Key": "Read"
+    },
+    {
+      "DownstreamPathTemplate": "/update",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 36668
+        }
+      ],
+      "UpstreamPathTemplate": "/update",
+      "Key": "Update"
+    },
+    {
+      "DownstreamPathTemplate": "/delete",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 33456
+        }
+      ],
+      "UpstreamPathTemplate": "/delete",
+      "Key": "Delete"
+    }
+  ],
+  "Aggregates": [
+    {
+      "RouteKeys": [
+        "Create",
+        "Read",
+        "Update",
+        "Delete"
+      ],
+      "UpstreamPathTemplate": "/SureSuccessApp"
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:5476"
+  }
+}
