@@ -1,8 +1,8 @@
-using System.Reflection;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
 using SureSuccessApp.Domain.Mappers;
 using SureSuccessApp.Domain.Services;
+using System.Reflection;
 
 namespace SureSuccessApp.Domain.Extensions
 {

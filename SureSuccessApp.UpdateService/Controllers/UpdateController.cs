@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using SureSuccessApp.Domain.DTOs.Request;
+using SureSuccessApp.Domain.DTOs.Responses;
 using SureSuccessApp.Domain.Services;
 using SureSuccessApp.UpdateService.Filters;
+using System;
+using System.Threading.Tasks;
 
 namespace SureSuccessApp.UpdateService.Controllers
 {
@@ -23,6 +22,7 @@ namespace SureSuccessApp.UpdateService.Controllers
             _logger = logger;
         }
 
+        [ProducesResponseType(200, Type = typeof(StudentResponse))]
         [HttpPut("{id:guid}")]
         [StudentExists]
         public async Task<IActionResult> Put(Guid id, EditStudentRequest request)

@@ -1,24 +1,24 @@
-using System;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using SureSuccessApp.Domain.DTOs.Request;
 using SureSuccessApp.Domain.Services;
+using System;
+using System.Threading.Tasks;
 
 namespace SureSuccessApp.CreateService.Filters
 {
     public class StudentExistsAttribute : TypeFilterAttribute
     {
         public StudentExistsAttribute() : base(typeof
-            (ItemExistsFilterImpl))
+            (StudentExistsFilterImpl))
         {
         }
 
-        public class ItemExistsFilterImpl : IAsyncActionFilter
+        public class StudentExistsFilterImpl : IAsyncActionFilter
         {
             private readonly StudentService _studentService;
 
-            public ItemExistsFilterImpl(StudentService studentService)
+            public StudentExistsFilterImpl(StudentService studentService)
             {
                 _studentService = studentService;
             }

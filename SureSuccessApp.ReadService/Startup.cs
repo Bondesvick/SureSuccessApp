@@ -1,16 +1,14 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using SureSuccessApp.Domain.Extensions;
+using SureSuccessApp.Domain.Repositories;
+using SureSuccessApp.Infrastructure.Repositories;
+using SureSuccessApp.ReadService.Extensions;
+using SureSuccessApp.ReadService.Filters;
 
 namespace SureSuccessApp.ReadService
 {
@@ -26,8 +24,18 @@ namespace SureSuccessApp.ReadService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
+
+            services
+                .AddAppDbContext(Configuration.GetSection("DataSource:ConnectionString").Value)
+                .AddScoped<IStudentRepository, StudentRepository>()
+                .AddSingleton<StudentExistsAttribute>()
+                .AddMappers()
+                .AddServices()
+                .AddControllers()
+                .AddValidation()
+                .AddJsonOptions(options => options.JsonSerializerOptions.IgnoreNullValues = true);
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SureSuccessApp.ReadService", Version = "v1" });

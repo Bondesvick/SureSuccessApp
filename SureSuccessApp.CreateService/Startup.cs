@@ -1,17 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using SureSuccessApp.CreateService.Extensions;
+using SureSuccessApp.CreateService.Filters;
 using SureSuccessApp.Domain.Extensions;
 using SureSuccessApp.Domain.Repositories;
 using SureSuccessApp.Infrastructure.Repositories;
@@ -35,6 +29,7 @@ namespace SureSuccessApp.CreateService
             services
                 .AddAppDbContext(Configuration.GetSection("DataSource:ConnectionString").Value)
                 .AddScoped<IStudentRepository, StudentRepository>()
+                .AddSingleton<StudentExistsAttribute>()
                 .AddMappers()
                 .AddServices()
                 .AddControllers()

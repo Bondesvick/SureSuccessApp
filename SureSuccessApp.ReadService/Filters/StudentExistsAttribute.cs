@@ -1,9 +1,9 @@
-using System;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using SureSuccessApp.Domain.DTOs.Request;
 using SureSuccessApp.Domain.Services;
+using System;
+using System.Threading.Tasks;
 
 namespace SureSuccessApp.ReadService.Filters
 {

@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using SureSuccessApp.DeleteService.Filters;
 using SureSuccessApp.Domain.DTOs.Request;
 using SureSuccessApp.Domain.Services;
+using System;
+using System.Threading.Tasks;
 
 namespace SureSuccessApp.DeleteService.Controllers
 {

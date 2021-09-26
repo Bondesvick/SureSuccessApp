@@ -1,13 +1,12 @@
-﻿using SureSuccessApp.Domain.DTOs.Request;
+﻿using Microsoft.Extensions.Logging;
+using SureSuccessApp.Domain.DTOs.Request;
 using SureSuccessApp.Domain.DTOs.Responses;
+using SureSuccessApp.Domain.Mappers;
+using SureSuccessApp.Domain.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using SureSuccessApp.Domain.Mappers;
-using SureSuccessApp.Domain.Repositories;
 
 namespace SureSuccessApp.Domain.Services
 {
