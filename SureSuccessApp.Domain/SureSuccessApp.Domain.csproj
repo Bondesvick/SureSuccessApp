@@ -5,11 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\Responses\" />
-    <Folder Include="DTOs\Requets\" />
-    <Folder Include="Mappers\" />
-    <Folder Include="Repositories\" />
-    <Folder Include="Services\" />
+    <PackageReference Include="FluentValidation" Version="10.3.3" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="10.3.3" />
   </ItemGroup>
 
 </Project>

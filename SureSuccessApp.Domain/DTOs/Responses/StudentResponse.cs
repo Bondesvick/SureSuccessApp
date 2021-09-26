@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SureSuccessApp.Domain.Entities
+namespace SureSuccessApp.Domain.DTOs.Responses
 {
-    public class Student
+    public class StudentResponse
     {
         public Guid Id { get; set; }
         public string FirstName { get; set; }

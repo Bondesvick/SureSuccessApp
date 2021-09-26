@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SureSuccessApp.Domain.Entities
+namespace SureSuccessApp.Domain.DTOs.Request
 {
-    public class Student
+    public class AddStudentRequest
     {
-        public Guid Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Phone { get; set; }
