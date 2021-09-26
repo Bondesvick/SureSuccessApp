@@ -9,7 +9,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Filters\" />
+    <ProjectReference Include="..\SureSuccessApp.Infrastructure\SureSuccessApp.Infrastructure.csproj" />
   </ItemGroup>
-
 </Project>

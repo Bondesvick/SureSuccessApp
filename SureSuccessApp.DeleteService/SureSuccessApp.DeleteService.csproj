@@ -8,6 +8,6 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Filters\" />
+    <ProjectReference Include="..\SureSuccessApp.Infrastructure\SureSuccessApp.Infrastructure.csproj" />
   </ItemGroup>
 </Project>

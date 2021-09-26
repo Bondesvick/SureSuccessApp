@@ -68,7 +68,7 @@ namespace SureSuccessApp.Domain.Services
             var result = await _studentRepository.GetAsync(request.Id);
             //result.IsInactive = true;
 
-            _studentRepository.Update(result);
+            _studentRepository.Delete(result);
             await _studentRepository.UnitOfWork.SaveChangesAsync();
 
             return _studentMapper.Map(result);

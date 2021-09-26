@@ -4,6 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SureSuccessApp.DeleteService.Filters;
+using SureSuccessApp.Domain.DTOs.Request;
+using SureSuccessApp.Domain.Services;
 
 namespace SureSuccessApp.DeleteService.Controllers
 {
@@ -11,29 +14,24 @@ namespace SureSuccessApp.DeleteService.Controllers
     [Route("[controller]")]
     public class DeleteController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
+        private readonly IStudentService _studentService;
         private readonly ILogger<DeleteController> _logger;
 
-        public DeleteController(ILogger<DeleteController> logger)
+        public DeleteController(IStudentService studentService, ILogger<DeleteController> logger)
         {
+            _studentService = studentService;
             _logger = logger;
         }
 
-        [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        [HttpDelete("{id:guid}")]
+        [StudentExists]
+        public async Task<IActionResult> Delete(Guid id)
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+            var request = new DeleteStudentRequest { Id = id };
+
+            await _studentService.DeleteStudentAsync(request);
+
+            return NoContent();
         }
     }
 }

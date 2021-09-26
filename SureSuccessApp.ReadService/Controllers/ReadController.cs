@@ -4,6 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SureSuccessApp.Domain.DTOs.Request;
+using SureSuccessApp.Domain.DTOs.Responses;
+using SureSuccessApp.Domain.Services;
+using SureSuccessApp.ReadService.Filters;
+using SureSuccessApp.ReadService.ResponseModels;
 
 namespace SureSuccessApp.ReadService.Controllers
 {
@@ -11,29 +16,39 @@ namespace SureSuccessApp.ReadService.Controllers
     [Route("[controller]")]
     public class ReadController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
+        private readonly IStudentService _studentService;
         private readonly ILogger<ReadController> _logger;
 
-        public ReadController(ILogger<ReadController> logger)
+        public ReadController(IStudentService studentService, ILogger<ReadController> logger)
         {
+            _studentService = studentService;
             _logger = logger;
         }
 
-        [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        [HttpGet("{id:guid}")]
+        [StudentExists]
+        public async Task<IActionResult> GetById(Guid id)
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+            var result = await _studentService.GetStudentAsync(new GetStudentRequest { Id = id });
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Get([FromQuery] int pageSize = 10, [FromQuery] int pageIndex = 0)
+        {
+            var result = await _studentService.GetStudentsAsync();
+
+            var totalItems = result.Count();
+
+            var itemsOnPage = result
+                .OrderBy(c => c.FirstName)
+                .Skip(pageSize * pageIndex)
+                .Take(pageSize);
+
+            var model = new PaginatedStudentResponseModel<StudentResponse>(
+                pageIndex, pageSize, totalItems, itemsOnPage);
+
+            return Ok(model);
         }
     }
 }

@@ -11,6 +11,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SureSuccessApp.CreateService.Extensions;
+using SureSuccessApp.Domain.Extensions;
+using SureSuccessApp.Domain.Repositories;
+using SureSuccessApp.Infrastructure.Repositories;
 
 namespace SureSuccessApp.CreateService
 {
@@ -26,8 +30,17 @@ namespace SureSuccessApp.CreateService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
+
+            services
+                .AddAppDbContext(Configuration.GetSection("DataSource:ConnectionString").Value)
+                .AddScoped<IStudentRepository, StudentRepository>()
+                .AddMappers()
+                .AddServices()
+                .AddControllers()
+                .AddValidation()
+                .AddJsonOptions(options => options.JsonSerializerOptions.IgnoreNullValues = true);
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SureSuccessApp.CreateService", Version = "v1" });
@@ -40,9 +53,10 @@ namespace SureSuccessApp.CreateService
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SureSuccessApp.CreateService v1"));
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SureSuccessApp.CreateService v1"));
 
             app.UseHttpsRedirection();
 

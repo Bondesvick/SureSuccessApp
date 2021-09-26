@@ -4,6 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SureSuccessApp.Domain.DTOs.Request;
+using SureSuccessApp.Domain.Services;
+using SureSuccessApp.UpdateService.Filters;
 
 namespace SureSuccessApp.UpdateService.Controllers
 {
@@ -11,29 +14,22 @@ namespace SureSuccessApp.UpdateService.Controllers
     [Route("[controller]")]
     public class UpdateController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
+        private readonly IStudentService _studentService;
         private readonly ILogger<UpdateController> _logger;
 
-        public UpdateController(ILogger<UpdateController> logger)
+        public UpdateController(IStudentService studentService, ILogger<UpdateController> logger)
         {
+            _studentService = studentService;
             _logger = logger;
         }
 
-        [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        [HttpPut("{id:guid}")]
+        [StudentExists]
+        public async Task<IActionResult> Put(Guid id, EditStudentRequest request)
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+            request.Id = id;
+            var result = await _studentService.EditStudentAsync(request);
+            return Ok(result);
         }
     }
 }

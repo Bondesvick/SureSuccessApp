@@ -4,6 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SureSuccessApp.CreateService.Filters;
+using SureSuccessApp.Domain.DTOs.Request;
+using SureSuccessApp.Domain.Services;
 
 namespace SureSuccessApp.CreateService.Controllers
 {
@@ -11,29 +14,28 @@ namespace SureSuccessApp.CreateService.Controllers
     [Route("[controller]")]
     public class CreateController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
+        private readonly IStudentService _studentService;
         private readonly ILogger<CreateController> _logger;
 
-        public CreateController(ILogger<CreateController> logger)
+        public CreateController(IStudentService studentService, ILogger<CreateController> logger)
         {
+            _studentService = studentService;
             _logger = logger;
         }
 
-        [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        [HttpGet("{id:guid}")]
+        [StudentExists]
+        public async Task<IActionResult> GetById(Guid id)
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+            var result = await _studentService.GetStudentAsync(new GetStudentRequest { Id = id });
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Post(AddStudentRequest request)
+        {
+            var result = await _studentService.AddStudentAsync(request);
+            return CreatedAtAction(nameof(GetById), new { id = result.Id }, null);
         }
     }
 }
