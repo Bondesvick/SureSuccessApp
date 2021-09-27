@@ -22,7 +22,7 @@ namespace SureSuccessApp.DeleteService.Controllers
         }
 
         [HttpDelete("{id:guid}")]
-        [StudentExists]
+        //[StudentExists]
         public async Task<IActionResult> Delete(Guid id)
         {
             var request = new DeleteStudentRequest { Id = id };

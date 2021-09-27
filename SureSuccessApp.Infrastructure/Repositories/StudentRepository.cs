@@ -3,6 +3,7 @@ using SureSuccessApp.Domain.Entities;
 using SureSuccessApp.Domain.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SureSuccessApp.Infrastructure.Repositories
@@ -39,7 +40,7 @@ namespace SureSuccessApp.Infrastructure.Repositories
 
         public async Task<Student> GetAsync(Guid id)
         {
-            var student = await _context.Students
+            var student = await _context.Students.Where(s => s.Id == id)
                 .AsNoTracking().FirstOrDefaultAsync();
 
             if (student == null) return null;

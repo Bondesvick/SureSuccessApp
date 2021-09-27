@@ -1,13 +1,18 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Polly;
 using SureSuccessApp.CreateService.Extensions;
 using SureSuccessApp.CreateService.Filters;
 using SureSuccessApp.Domain.Extensions;
 using SureSuccessApp.Domain.Repositories;
+using SureSuccessApp.Infrastructure;
 using SureSuccessApp.Infrastructure.Repositories;
 
 namespace SureSuccessApp.CreateService
@@ -50,8 +55,10 @@ namespace SureSuccessApp.CreateService
                 app.UseDeveloperExceptionPage();
             }
 
+            //ExecuteMigrations(app, env);
+
             app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SureSuccessApp.CreateService v1"));
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SureSuccessApp.UpdateService v1"));
 
             app.UseHttpsRedirection();
 
@@ -63,6 +70,22 @@ namespace SureSuccessApp.CreateService
             {
                 endpoints.MapControllers();
             });
+        }
+
+        private void ExecuteMigrations(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            if (env.EnvironmentName == "Testing") return;
+
+            var retry = Policy.Handle<SqlException>()
+                .WaitAndRetry(new TimeSpan[]
+                {
+                    TimeSpan.FromSeconds(2),
+                    TimeSpan.FromSeconds(6),
+                    TimeSpan.FromSeconds(12)
+                });
+
+            retry.Execute(() =>
+                app.ApplicationServices.GetService<AppDbContext>().Database.Migrate());
         }
     }
 }

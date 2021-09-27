@@ -5,6 +5,7 @@ using SureSuccessApp.Domain.DTOs.Request;
 using SureSuccessApp.Domain.DTOs.Responses;
 using SureSuccessApp.Domain.Services;
 using System;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace SureSuccessApp.CreateService.Controllers
@@ -22,9 +23,12 @@ namespace SureSuccessApp.CreateService.Controllers
             _logger = logger;
         }
 
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(StudentResponse), (int)HttpStatusCode.OK)]
         [ProducesResponseType(200, Type = typeof(StudentResponse))]
         [HttpGet("{id:guid}")]
-        [StudentExists]
+        //[StudentExists]
         public async Task<IActionResult> GetById(Guid id)
         {
             try
@@ -40,13 +44,16 @@ namespace SureSuccessApp.CreateService.Controllers
             }
         }
 
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(StudentResponse), (int)HttpStatusCode.Created)]
         [HttpPost]
         public async Task<IActionResult> Post(AddStudentRequest request)
         {
             try
             {
                 var result = await _studentService.AddStudentAsync(request);
-                return CreatedAtAction(nameof(GetById), new { id = result.Id }, null);
+                return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
             }
             catch (Exception e)
             {

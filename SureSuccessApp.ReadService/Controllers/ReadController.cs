@@ -26,7 +26,7 @@ namespace SureSuccessApp.ReadService.Controllers
 
         [ProducesResponseType(200, Type = typeof(StudentResponse))]
         [HttpGet("{id:guid}")]
-        [StudentExists]
+        //[StudentExists]
         public async Task<IActionResult> GetById(Guid id)
         {
             var result = await _studentService.GetStudentAsync(new GetStudentRequest { Id = id });

@@ -1,13 +1,18 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Polly;
 using SureSuccessApp.DeleteService.Extensions;
 using SureSuccessApp.DeleteService.Filters;
 using SureSuccessApp.Domain.Extensions;
 using SureSuccessApp.Domain.Repositories;
+using SureSuccessApp.Infrastructure;
 using SureSuccessApp.Infrastructure.Repositories;
 
 namespace SureSuccessApp.DeleteService
@@ -48,9 +53,12 @@ namespace SureSuccessApp.DeleteService
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SureSuccessApp.DeleteService v1"));
             }
+
+            //ExecuteMigrations(app, env);
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SureSuccessApp.UpdateService v1"));
 
             app.UseHttpsRedirection();
 
@@ -62,6 +70,22 @@ namespace SureSuccessApp.DeleteService
             {
                 endpoints.MapControllers();
             });
+        }
+
+        private void ExecuteMigrations(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            if (env.EnvironmentName == "Testing") return;
+
+            var retry = Policy.Handle<SqlException>()
+                .WaitAndRetry(new TimeSpan[]
+                {
+                    TimeSpan.FromSeconds(2),
+                    TimeSpan.FromSeconds(6),
+                    TimeSpan.FromSeconds(12)
+                });
+
+            retry.Execute(() =>
+                app.ApplicationServices.GetService<AppDbContext>().Database.Migrate());
         }
     }
 }

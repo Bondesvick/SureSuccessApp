@@ -25,7 +25,19 @@
       "Key": "Read"
     },
     {
-      "DownstreamPathTemplate": "/update",
+      "DownstreamPathTemplate": "/read/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 25878
+        }
+      ],
+      "UpstreamPathTemplate": "/read/{id}",
+      "Key": "ReadSingle"
+    },
+    {
+      "DownstreamPathTemplate": "/update/{id}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -33,11 +45,11 @@
           "Port": 36668
         }
       ],
-      "UpstreamPathTemplate": "/update",
+      "UpstreamPathTemplate": "/update/{id}",
       "Key": "Update"
     },
     {
-      "DownstreamPathTemplate": "/delete",
+      "DownstreamPathTemplate": "/delete/{id}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -45,7 +57,7 @@
           "Port": 33456
         }
       ],
-      "UpstreamPathTemplate": "/delete",
+      "UpstreamPathTemplate": "/delete/{id}",
       "Key": "Delete"
     }
   ],
@@ -54,6 +66,7 @@
       "RouteKeys": [
         "Create",
         "Read",
+        "ReadSingle",
         "Update",
         "Delete"
       ],

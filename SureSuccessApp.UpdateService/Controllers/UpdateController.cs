@@ -24,7 +24,7 @@ namespace SureSuccessApp.UpdateService.Controllers
 
         [ProducesResponseType(200, Type = typeof(StudentResponse))]
         [HttpPut("{id:guid}")]
-        [StudentExists]
+        //[StudentExists]
         public async Task<IActionResult> Put(Guid id, EditStudentRequest request)
         {
             request.Id = id;
